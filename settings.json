@@ -1,0 +1,60 @@
+{
+	"PID": {
+		"MELTER": {
+			"target": 80
+		},
+		"left": {
+			"target": 55,
+			"kp": 0.25,
+			"ki": 0,
+			"kd": 0,
+			"dt": 1.008
+		},
+		"middle": {
+			"target": null,
+			"kp": 0.25,
+			"ki": 0,
+			"kd": 0,
+			"dt": 1.008
+		},
+		"right": {
+			"target": 5,
+			"kp": 0.25,
+			"ki": 0,
+			"kd": 0,
+			"dt": 1.008
+		}
+	},
+	"wiring": {
+		"LeftFET": "21",
+		"MiddleFET": "27",
+		"RightFET": "23",
+
+		"Right": {
+			"DO": 18,
+			"CS": 17,
+			"CLK": 4
+		},
+		"Middle": {
+			"DO": 24,
+			"CS": 16,
+			"CLK": 22
+		},
+		"Left": {
+			"DO": 20,
+			"CS": 19,
+			"CLK": 25
+		}
+	},
+	"scripts": {
+		"read_thermocouple": "Scripts_Python/read_Thermocouples.py",
+		"single_thermocouple": "Scripts_Python/single_Thermocouples.py",
+		"test_thermocouple": "Scripts_Python/test_Thermocouples.py",
+
+		"test_ADC": "Scripts_Python/test_ADC.py",
+
+		"installMeteor": "Scripts_Shell/make.sh",
+		"start_Pi_Blaster": "Scripts_Shell/start_Pi-Blaster.sh",
+		"updateRPI": "Scripts_Shell/update.sh"
+	}
+}

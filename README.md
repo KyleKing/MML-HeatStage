@@ -1,18 +1,6 @@
 # MML-HeatStage
 Maryland MEMS and Microfluidics Laboratory Node Application to control a dual-heat stage among other things
 
-
-# TODO:
-
-perl: warning: Please check that your locale settings:
-LANGUAGE = (unset),
-LC_ALL = (unset),
-LANG = "en_GB.UTF-8"
-are supported and installed on your system.
-
-
-
-
 ## Starting from Scratch
 
 First, you'll want a clean installation of Jessie on a SD card 4gb or greater (8 gb preferable)
@@ -117,35 +105,134 @@ Click through the menu options using your arrow keys. You will want to make sure
 
 ### Installation
 
-You will need to install a few prerequisites to get started. Go to the Adafruit guide or follow the identical instructions below:
+You will need to install a few prerequisites to get started.
 
 ```sh
 # Download the node installer:
-curl -sLS https://apt.adafruit.com/add | sudo bash
-sudo apt-get install node -y
+wget https://nodejs.org/dist/v4.0.0/node-v4.0.0-linux-armv7l.tar.gz 
+tar -xvf node-v4.0.0-linux-armv7l.tar.gz 
+cd node-v4.0.0-linux-armv7l
 
-# Download Kyle's Node Application:
+# Download a python library for thermocouples
 cd ~
-git clone https://github.com/KyleKing/MML-HeatStage.git
+sudo apt-get install build-essential python-dev python-smbus -y
+git clone https://github.com/adafruit/Adafruit_Python_MAX31855.git
+cd Adafruit_Python_MAX31855
+sudo python setup.py install
 ```
 
 Then check to make sure node was installed:
 
 ```sh
 node -v
-# you should get: v0.12.6
+# it should return: v4.0.0
 ```
 
 Install the other files for the Node Application:
 
 ```sh
+# Download Kyle's Node Application:
+cd ~
+git clone https://github.com/KyleKing/MML-HeatStage.git
 cd ~/MML-HeatStage/
 npm install
 # this may take ~15 minutes
 ```
 
+To make sure everything is up to date, make sure to run this file. Although you don't need to run it right now:
 
-### First Use
+```sh
+cd ~/MML-HeatStage/Scripts_Shell/
+bash update.sh
+```
+
+### Configure Thingspeak
+
+You will need to create an account and grab a couple of authentication keys:
+
+1. [Create an account here](https://thingspeak.com/users/sign_up) 
+
+	![Annotated Screenshot](README/T1-create.png)
+
+2. Get the necessary details (See annotated screenshot below)
+
+	![Annotated Screenshot](README/T2-screenshot.png)
+
+3. Run a few more command line commands:
+
+	```sh
+	cd ~/MML-HeatStage/
+	# Make a new file:
+	touch thingspeakkey.json
+	# Edit the file:
+	nano thingspeakkey.json
+	```
+	
+	Edit these numbers to match your specific Thingspeak account and paste the edited text into the open file editor:
+	
+	```json
+	{
+		"channel": 125272,
+		"write": "1G0HBCF12MTA9H6F",
+		"read": "AG1RWWSDL6GPXTO"
+	}
+	```
+
+## First Use
+
+Run:
+
+```sh
+cd ~/MML-HeatStage
+node init.js -l
+```
+
+and you should see something like this (note: press <kbd>Ctrl</kbd>+<kbd>C</kbd> to quit):
+
+![Local iTerm](README/init-l.png)
+
+The displays shows `H` - the designated hot thermocouple temperature and the internal breakout board temperature `H(i)` as a control value. Above this line is the raw PID output. The first value is calculated by the PID controller and the second is the clipped version, which is the state of the MOSFET controller, which ranges from 0 - 1. Due to rate limiting of the Thingspeak API, you will intermittently get an update when the Thingspeak chart has been updated.
+
+If you wish to see greater details and other debugging information, use this command: `node init.js -ld`
+
+![Local iTerm](README/init-ld.png)
+
+In the past two examples you've already used options flags, which are interpreted by the Node application. Like this (you can get this output by running `node init.js --help`:
+
+```sh
+Usage: init [options]
+
+Options:
+
+	-h, --help     output usage information
+	-V, --version  output the version number
+	-M, --melter   single heat stage melter version
+	-m, --monitor  shut down peltier elements and monitor temperature
+	-d, --debug    run in debug mode (verbose)
+	-l, --local    when not a Raspberry Pi, run in 'local' mode
+```
+
+We have been using the `--local` or `-l` flag, which lets the code know that you don't have the proper electrical circuits configured. This is great for testing the code and to make sure the software works as expected. To actually run the device and use the thermocouple feedback and PID control, you don't need any flags, simply run `node init.js`.
+
+On a quick side note, for melting the agarose bead bed, use `node init.js -melter` or `node init.js -M`, which runs only one thermocouple/Peltier tile.
+
+![Local iTerm](README/init-lM.png)
+
+
+
+## Putting Everything Together (Electronics)
+
+You will need to edit the `settings.json` file to some extent.
+
+TODO:
+
+- settings
+- wiring diagrams (what app?) and check pin numbering
+- show pictures of setup
 
 
 ## Next Steps
+
+The code base currently supports controlling syringe pumps and the pi camera, but I ran out of time to finish the implementation and the user interface. If you would like to continue developing the code base the functionality is there.
+
+To see the literature review, early results, posters, other documentation, and ideas for future directions of this research, refer to the mantis issue here: 

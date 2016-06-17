@@ -1,3 +1,9 @@
+# Specifics
+.DS_Store
+thingspeakkey.json
+.acrosync
+.idea
+
 # Logs
 logs
 *.log

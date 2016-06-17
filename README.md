@@ -109,8 +109,8 @@ You will need to install a few prerequisites to get started.
 
 ```sh
 # Download the node installer:
-wget https://nodejs.org/dist/v4.0.0/node-v4.0.0-linux-armv7l.tar.gz 
-tar -xvf node-v4.0.0-linux-armv7l.tar.gz 
+wget https://nodejs.org/dist/v4.0.0/node-v4.0.0-linux-armv7l.tar.gz
+tar -xvf node-v4.0.0-linux-armv7l.tar.gz
 cd node-v4.0.0-linux-armv7l
 
 # Download a python library for thermocouples
@@ -150,13 +150,21 @@ bash update.sh
 
 You will need to create an account and grab a couple of authentication keys:
 
-1. [Create an account here](https://thingspeak.com/users/sign_up) 
+1. [Create an account here](https://thingspeak.com/users/sign_up)
 
-	![Annotated Screenshot](README/T1-create.png)
+    <p align="center">
+        <img width="450" height=auto src="README/T1-create.png">
+    </p>
 
-2. Get the necessary details (See annotated screenshot below)
+	<!-- ![Annotated Screenshot](README/T1-create.png) -->
 
-	![Annotated Screenshot](README/T2-screenshot.png)
+2. Get the necessary details (see annotated screenshot below)
+
+    <p align="center">
+        <img width="450" height=auto src="README/T2-screenshot.png">
+    </p>
+
+	<!-- ![Annotated Screenshot](README/T2-screenshot.png) -->
 
 3. Run a few more command line commands:
 
@@ -167,9 +175,9 @@ You will need to create an account and grab a couple of authentication keys:
 	# Edit the file:
 	nano thingspeakkey.json
 	```
-	
+
 	Edit these numbers to match your specific Thingspeak account and paste the edited text into the open file editor:
-	
+
 	```json
 	{
 		"channel": 125272,
@@ -189,13 +197,21 @@ node init.js -l
 
 and you should see something like this (note: press <kbd>Ctrl</kbd>+<kbd>C</kbd> to quit):
 
-![Local iTerm](README/init-l.png)
+<p align="center">
+    <img width="450" height=auto src="README/init-l.png">
+</p>
+
+<!-- ![Local iTerm](README/init-l.png) -->
 
 The displays shows `H` - the designated hot thermocouple temperature and the internal breakout board temperature `H(i)` as a control value. Above this line is the raw PID output. The first value is calculated by the PID controller and the second is the clipped version, which is the state of the MOSFET controller, which ranges from 0 - 1. Due to rate limiting of the Thingspeak API, you will intermittently get an update when the Thingspeak chart has been updated.
 
 If you wish to see greater details and other debugging information, use this command: `node init.js -ld`
 
-![Local iTerm](README/init-ld.png)
+<p align="center">
+    <img width="450" height=auto src="README/init-ld.png">
+</p>
+
+<!-- ![Local iTerm](README/init-ld.png) -->
 
 In the past two examples you've already used options flags, which are interpreted by the Node application. Like this (you can get this output by running `node init.js --help`:
 
@@ -216,9 +232,11 @@ We have been using the `--local` or `-l` flag, which lets the code know that you
 
 On a quick side note, for melting the agarose bead bed, use `node init.js -melter` or `node init.js -M`, which runs only one thermocouple/Peltier tile.
 
-![Local iTerm](README/init-lM.png)
+<p align="center">
+    <img width="450" height=auto src="README/init-lM.png">
+</p>
 
-
+<!-- ![Local iTerm](README/init-lM.png) -->
 
 ## Putting Everything Together (Electronics)
 
@@ -235,4 +253,4 @@ TODO:
 
 The code base currently supports controlling syringe pumps and the pi camera, but I ran out of time to finish the implementation and the user interface. If you would like to continue developing the code base the functionality is there.
 
-To see the literature review, early results, posters, other documentation, and ideas for future directions of this research, refer to the mantis issue here: 
+To see the literature review, early results, posters, other documentation, and ideas for future directions of this research, refer to the mantis issue here:

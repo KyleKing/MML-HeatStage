@@ -25,6 +25,12 @@ sensorB = MAX31855.MAX31855(CLKb, CSb, DOb)
 # Bad pins for CLK: 16, 21, 6, 5, 13
 
 
+# linear calibration
+def calib(raw):
+    calibrated = raw - 5.5
+    return calibrated
+
+
 # convert Celsius to Fahrenheit
 def c_to_f(celsius):
     fahrenheit = celsius * 9.0 / 5 + 32
@@ -33,10 +39,10 @@ def c_to_f(celsius):
 
 # Loop printing measurements every second.
 while True:
-    tempT = sensorT.readTempC()
-    internalT = sensorT.readInternalC()
-    tempM = sensorM.readTempC()
-    internalM = sensorM.readInternalC()
+    tempT = calib(sensorT.readTempC())
+    internalT = calib(sensorT.readInternalC())
+    tempM = calib(sensorM.readTempC())
+    internalM = calib(sensorM.readInternalC())
     CSV = '{0:0.3F}, {1:0.3F}, {2:0.3F}, {3:0.3F}'
     print CSV.format(tempT, internalT, tempM, internalM)
 

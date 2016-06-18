@@ -26,8 +26,8 @@ module.exports = {
       correction = 0;
       color = clc.blue;
     }
-    console.log('   Correction = ' + rawCorrection.toPrecision(2) +
-      ' PWM value: ' + correction.toPrecision(2));
+    console.log('   Raw PID: ' + rawCorrection.toPrecision(2) +
+      ' and Clipped PWM value: ' + correction.toPrecision(2));
     return {
       correction: correction,
       color: color

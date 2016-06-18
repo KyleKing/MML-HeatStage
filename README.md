@@ -84,7 +84,6 @@ ssh-keygen -R # "<enter hostname>”
 ssh-keygen -R 192.168.2.9
 ```
 
-
 ### Configure the Raspberry Pi
 
 The initial password is `raspberry`. Once logged in you will need to run:
@@ -123,20 +122,36 @@ sudo python setup.py install
 
 # Download the library for PWM control
 # Pi-Blaster: https://github.com/sarfata/pi-blaster
-sudo apt-get install debhelper dh-autoreconf dh-systemd dpkg-dev init-system-helpers autoconf -y
-dpkg-buildpackage -us -uc -i sudo dpkg -i ../pi-blaster*.deb
-
-sudo apt-get install autoconf
-./autogen.sh
-./configure
-make
+sudo apt-get install autoconf -y
+cd ~
+git clone https://github.com/sarfata/pi-blaster.git
+cd ~/pi-blaster/
+./autogen.sh; ./configure && make
 ```
 
-Then check to make sure node was installed:
+Check the newly installed libraries
 
 ```sh
 node -v
 # it should return: v4.0.0
+
+# Test the Thermocouple libraries:
+python ~/MML-HeatStage/Scripts_Python/read_Thermocouples.py
+# This should print out something like this:
+# 24.250, 24.562, 23.000, 23.750
+# 24.250, 24.562, 23.000, 23.750
+# etc.
+
+# Test the Pi-Blaster for MOSFET Control:
+bash ~/MML-HeatStage/Scripts_Shell/start_Pi-Blaster.sh
+echo "21=1" > /dev/pi-blaster
+sleep 3
+echo "21=.2" > /dev/pi-blaster
+sleep 3
+echo "21=0.5" > /dev/pi-blaster
+sleep 3
+echo "21=0" > /dev/pi-blaster
+# The LED of the Left MOSFET should change in brightness
 ```
 
 Install the other files for the Node Application:

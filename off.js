@@ -3,4 +3,5 @@
 /////////////////////////////////////////
 
 var tempController = require('./modules/tempController.js');
+tempController.configureWiring();
 tempController.powerDown();

@@ -11,6 +11,12 @@ DOt = 25
 sensorT = MAX31855.MAX31855(CLKt, CSt, DOt)
 
 
+# linear calibration
+def calib(raw):
+    calibrated = raw - 5.5
+    return calibrated
+
+
 # convert Celsius to Fahrenheit
 def c_to_f(celsius):
     fahrenheit = celsius * 9.0 / 5 + 32
@@ -19,8 +25,8 @@ def c_to_f(celsius):
 
 # Loop printing measurements every second.
 while True:
-    tempT = sensorT.readTempC()
-    internalT = sensorT.readInternalC()
+    tempT = calib(sensorT.readTempC())
+    internalT = calib(sensorT.readInternalC())
     CSV = '{0:0.3F}, {1:0.3F}'
     print CSV.format(tempT, internalT)
 

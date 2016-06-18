@@ -121,12 +121,6 @@ module.exports = {
       console.log(warn('\n****Powering up some pins, watch out.****\n'));
       spawn('sh', [this.set.scripts.start_Pi_Blaster]);
       // piblaster.setPwm(this.FanFET, 0.9);
-      var hotPWM = 0.4;
-      piblaster.setPwm(process.env.HotFET, hotPWM);
-      if (process.env.MELTER === 'false') {
-        var coldPWM = 0.9;
-        piblaster.setPwm(process.env.ColdFET, coldPWM);
-      }
       tempCont('Done: Powering Up Mosfet Control');
     } else this.powerDown();
   },
@@ -145,7 +139,12 @@ module.exports = {
    * Realtime temperature updates
    */
   monitor: function (message) {
+    tempCont('Starting Monitor Function');
     var message = message.trim().split(',');
+    if (process.env.MELTER === 'true') {
+      message[2] = '0';
+      message[3] = '0';
+    }
     var hotExternal = message[0].trim(),
         hotInternal = message[1].trim(),
         coldExternal = message[2].trim(),
@@ -163,7 +162,7 @@ module.exports = {
     var coldPWM = 0;
     if (process.env.MELTER === 'false') {
       var coldCorrection = coldController.update(coldExternal),
-          coldClipped = util.clipCorrection((-1)*coldCorrection);
+          coldClipped = util.clipCorrection(coldCorrection);
       coldPWM = coldClipped.correction;
       // Note that the cold value was negated ^
       console.log('C: ' + coldClipped.color(coldExternal+'°C') + ' and C(i): ' +
@@ -173,7 +172,7 @@ module.exports = {
     util.updateThingspeakAPI(client, hotExternal, hotPWM,
       coldExternal, coldPWM);
 
-    if (process.env.MONITOR === false && process.env.LOCAL !== 'true') {
+    if (process.env.MONITOR === 'false' && process.env.LOCAL === 'false') {
       piblaster.setPwm(process.env.HotFET, hotPWM);
       if (process.env.MELTER === 'false')
         piblaster.setPwm(process.env.ColdFET, coldPWM);

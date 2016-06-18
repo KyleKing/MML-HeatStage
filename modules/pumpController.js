@@ -14,8 +14,8 @@ module.exports = {
     serialport.list(function (err, ports) {
       ports.forEach(function(port) {
         console.log(port);
-        console.log('port.comName: ' + port.comName);
-        console.log('port.productId: ' + port.productId);
+        // console.log('port.comName: ' + port.comName);
+        // console.log('port.productId: ' + port.productId);
         // console.log(port.locationId);
         // console.log(port.vendorId);
         console.log('---------port-parser break---------');

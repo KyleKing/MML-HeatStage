@@ -17,6 +17,14 @@ process.env.MONITOR = program.monitor || false;
 process.env.DEBUG = program.debug || false;
 process.env.LOCAL = program.local || false;
 
+var debug = require('debug');
+if (process.env.DEBUG === 'true') debug.enable('app:*');
+
+var initDebug = debug('app:init');
+initDebug('MELTER = ' + process.env.MELTER);
+initDebug('MONITOR = ' + process.env.MONITOR);
+initDebug('LOCAL = ' + process.env.LOCAL);
+
 var tempController = require('./modules/tempController.js');
 var clc = require('cli-color');
 var warning = clc.yellow.bold;
@@ -33,7 +41,7 @@ var pumpController = require('./modules/pumpController.js');
 var ports = pumpController.init();
 ports.forEach(logPorts);
 var serialPort = [];
-function logPorts(element, index, array) {
+function logPorts(element, index) {
   console.log('a[' + index + '] = ' + element);
   serialPort.push(pumpController.createConnection(element.comName));
 }

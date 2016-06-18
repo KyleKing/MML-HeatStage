@@ -5,13 +5,13 @@ Maryland MEMS and Microfluidics Laboratory Node Application to control a dual-he
 
 First, you'll want a clean installation of Jessie on a SD card 4gb or greater (8 gb preferable)
 
-### To Erase a Previous Memory Card
+### Format a fresh microSD Card
 
-Using a microSD adapter, erase the SD card to the `MS-DOS (FAT)` format. On a Mac this can be done through the Disk Utility application.
+Using a microSD adapter, erase the microSD card to the `MS-DOS (FAT)` format. On a Mac this can be done through the Disk Utility application.
 
-### Download Raspbian-Jessie
+### Download `Raspbian-Jessie`
 
-Download the [latest distribution hosted by the Raspberry Pi foundation](https://www.raspberrypi.org/downloads/raspbian/). The `.img` file is about 1.5 gb, so it will take some time to download. Once finished, make the erased memory card bootable. You will need to open a terminal/command line application. For the most part you can copy and paste these commands, but make sure to read them first.
+Download the [latest distribution hosted by the Raspberry Pi foundation](https://www.raspberrypi.org/downloads/raspbian/). The `.img` file is about 1.5 gb, so it will take some time to download. To make the SD card bootable by the Raspberry Pi, you will need to open Terminal on Linux/Mac or gnome-terminal for PC. For the most part you can copy and paste these commands, but make sure to read them first.
 
 1. Get the microSD disk number and unmount the specified disk (in this case, /dev/disk2)
 
@@ -114,11 +114,22 @@ tar -xvf node-v4.0.0-linux-armv7l.tar.gz
 cd node-v4.0.0-linux-armv7l
 
 # Download a python library for thermocouples
+# Adafruit_Python_MAX31855: https://github.com/adafruit/Adafruit_Python_MAX31855
 cd ~
 sudo apt-get install build-essential python-dev python-smbus -y
 git clone https://github.com/adafruit/Adafruit_Python_MAX31855.git
 cd Adafruit_Python_MAX31855
 sudo python setup.py install
+
+# Download the library for PWM control
+# Pi-Blaster: https://github.com/sarfata/pi-blaster
+sudo apt-get install debhelper dh-autoreconf dh-systemd dpkg-dev init-system-helpers autoconf -y
+dpkg-buildpackage -us -uc -i sudo dpkg -i ../pi-blaster*.deb
+
+sudo apt-get install autoconf
+./autogen.sh
+./configure
+make
 ```
 
 Then check to make sure node was installed:
@@ -208,7 +219,7 @@ The displays shows `H` - the designated hot thermocouple temperature and the int
 If you wish to see greater details and other debugging information, use this command: `node init.js -ld`
 
 <p align="center">
-    <img width="450" height=auto src="README/init-ld.png">
+    <img width="550" height=auto src="README/init-ld.png">
 </p>
 
 <!-- ![Local iTerm](README/init-ld.png) -->

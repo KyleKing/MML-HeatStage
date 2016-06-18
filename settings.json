@@ -26,9 +26,9 @@
 		}
 	},
 	"wiring": {
-		"LeftFET": "21",
-		"MiddleFET": "27",
-		"RightFET": "23",
+		"LeftFET": 21,
+		"MiddleFET": 27,
+		"RightFET": 23,
 
 		"Right": {
 			"DO": 18,

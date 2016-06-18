@@ -38,7 +38,9 @@
       "sourceType": "script"
     },
     "env": {
-      "node": true
+      "browser": true,
+      "node": true,
+      "shared-node-browser": true
     },
     "rules": {
       "curly": [

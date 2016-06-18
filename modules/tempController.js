@@ -56,6 +56,7 @@ module.exports = {
   init: function () {
     tempCont('Starting tempController');
     this.configureWiring();
+    this.powerUp();
 
     // Connect to Thingspeak:
     this.thingspeakkey = require(__dirname + '/../thingspeakkey.json');
@@ -67,11 +68,6 @@ module.exports = {
       writeKey: this.thingspeakkey.write,
       readKey: this.thingspeakkey.read
     });
-
-    if (process.env.LOCAL === 'true')
-      console.log(info('Not on a Raspberry Pi, so skipping MOSFET code'));
-    else if (process.env.MONITOR === false) this.powerUp();
-    else this.powerDown();
 
     // Start thermocouple-reading python script
     var pyScript = this.set.scripts.read_thermocouple;
@@ -119,23 +115,27 @@ module.exports = {
    * Power up the heating elements
    */
   powerUp: function () {
-    console.log(warn('****Powering up some pins, watch out.****'));
-    if (process.env.LOCAL !== 'true') spawn('sh', [scripts.start_Pi_Blaster]);
-    // piblaster.setPwm(this.FanFET, 0.9);
-    var hotPWM = 0.4;
-    piblaster.setPwm(process.env.HotFET, hotPWM);
-    if (process.env.MELTER === 'false') {
-      var coldPWM = 0.9;
-      piblaster.setPwm(process.env.ColdFET, coldPWM);
-    }
-    tempCont('Done: Powering Up Mosfet Control');
+    if (process.env.LOCAL === 'true')
+      console.log(warn('\nNot on a Raspberry Pi, so skipping MOSFET code\n'));
+    else if (process.env.MONITOR === 'false') {
+      console.log(warn('\n****Powering up some pins, watch out.****\n'));
+      spawn('sh', [this.set.scripts.start_Pi_Blaster]);
+      // piblaster.setPwm(this.FanFET, 0.9);
+      var hotPWM = 0.4;
+      piblaster.setPwm(process.env.HotFET, hotPWM);
+      if (process.env.MELTER === 'false') {
+        var coldPWM = 0.9;
+        piblaster.setPwm(process.env.ColdFET, coldPWM);
+      }
+      tempCont('Done: Powering Up Mosfet Control');
+    } else this.powerDown();
   },
 
   /**
    * Power up the heating elements
    */
   powerDown: function () {
-    console.log(warn('Powering down now!'));
+    console.log(warn('\nPowering down now!\n'));
     piblaster.setPwm(this.set.wiring.RightFET, 0);
     piblaster.setPwm(this.set.wiring.MiddleFET, 0);
     piblaster.setPwm(this.set.wiring.LeftFET, 0);

@@ -25,6 +25,15 @@ initDebug('MELTER = ' + process.env.MELTER);
 initDebug('MONITOR = ' + process.env.MONITOR);
 initDebug('LOCAL = ' + process.env.LOCAL);
 
+// var fs = require('fs-extra');
+var fs = require('fs');
+fs.access('thingspeakkey.json', fs.R_OK | fs.W_OK, function(err) {
+  if (err)
+    throw new Error ('Please make a thingspeakkey.json file. See: ' +
+      'https://github.com/KyleKing/MML-HeatStage#configure-thingspeak');
+});
+
+
 var tempController = require('./modules/tempController.js');
 var clc = require('cli-color');
 var warning = clc.yellow.bold;

@@ -4,25 +4,25 @@
 			"target": 80
 		},
 		"left": {
+			"target": 5,
+			"kp": -1.5,
+			"ki": 0,
+			"kd": 0,
+			"dt": 1.004
+		},
+		"middle": {
+			"target": null,
+			"kp": 0,
+			"ki": 0,
+			"kd": 0,
+			"dt": 1.004
+		},
+		"right": {
 			"target": 55,
 			"kp": 0.25,
 			"ki": 0,
 			"kd": 0,
-			"dt": 1.008
-		},
-		"middle": {
-			"target": null,
-			"kp": 0.25,
-			"ki": 0,
-			"kd": 0,
-			"dt": 1.008
-		},
-		"right": {
-			"target": 5,
-			"kp": 0.25,
-			"ki": 0,
-			"kd": 0,
-			"dt": 1.008
+			"dt": 1.004
 		}
 	},
 	"wiring": {

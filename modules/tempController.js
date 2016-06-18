@@ -94,7 +94,9 @@ module.exports = {
     tempCont('>> Wiring Config: FanFET: ' + this.FanFET + ' HotFET: ' +
       process.env.HotFET + ' ColdFET: ' + process.env.ColdFET);
 
-    var HotPID = this.set.PID.left;
+    var HotPID = this.set.PID.right;
+    tempCont('>> Hot PID controller: Kp: ' + HotPID.kp + ' Kd: ' + HotPID.kd +
+      ' Ki: ' + HotPID.ki);
     hotController = new Controller(HotPID.kp, HotPID.ki,
       HotPID.kd, HotPID.dt);
     if (process.env.MELTER === 'true') {
@@ -102,9 +104,11 @@ module.exports = {
         this.set.PID.MELTER.target + '°C');
       hotController.setTarget(this.set.PID.MELTER.target); // °C
     } else {
-      tempCont('Both temperature stages are PID-controlled');
       hotController.setTarget(HotPID.target); // °C
+      tempCont('Both temperature stages are PID-controlled');
       var ColdPID = this.set.PID.left;
+      tempCont('>> Cold PID controller: Kp: ' + ColdPID.kp + ' Kd: ' +
+        ColdPID.kd + ' Ki: ' + ColdPID.ki);
       coldController = new Controller(ColdPID.kp, ColdPID.ki,
         ColdPID.kd, ColdPID.dt);
       coldController.setTarget(ColdPID.target); // °C
@@ -164,7 +168,6 @@ module.exports = {
       var coldCorrection = coldController.update(coldExternal),
           coldClipped = util.clipCorrection(coldCorrection);
       coldPWM = coldClipped.correction;
-      // Note that the cold value was negated ^
       console.log('C: ' + coldClipped.color(coldExternal+'°C') + ' and C(i): ' +
         coldClipped.color(coldInternal+'°C') );
     }

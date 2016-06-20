@@ -3,23 +3,23 @@ Maryland MEMS and Microfluidics Laboratory Node Application to control a dual-he
 
 ## Table of Contents
 
-<!-- MarkdownTOC depth="6" autolink="true" -->
+<!-- MarkdownTOC depth="6" autolink="true" bracket="round" -->
 
-- [Quick Start][quick-start]
-- [*\(Alternatively\) Starting from Scratch*][alternatively-starting-from-scratch]
-    - [Format a fresh microSD Card][format-a-fresh-microsd-card]
-    - [Download `Raspbian-Jessie`][download-raspbian-jessie]
-- [Booting a Fresh Installation][booting-a-fresh-installation]
-    - [Fast Setup][fast-setup]
-    - [*\(Alternatively\) Headless Connection*][alternatively-headless-connection]
-        - [Troubleshooting SSH][troubleshooting-ssh]
-    - [Configure the Raspberry Pi][configure-the-raspberry-pi]
-- [Specifics for this Application][specifics-for-this-application]
-    - [Installation][installation]
-    - [Configure Thingspeak][configure-thingspeak]
-- [First Use][first-use]
-- [Putting Everything Together \(Electronics\)][putting-everything-together-electronics]
-- [Next Steps][next-steps]
+- [Quick Start](#quick-start)
+- [*\(Alternatively\) Starting from Scratch*](#alternatively-starting-from-scratch)
+    - [Format a fresh microSD Card](#format-a-fresh-microsd-card)
+    - [Download `Raspbian-Jessie`](#download-raspbian-jessie)
+- [Booting a Fresh Installation](#booting-a-fresh-installation)
+    - [Fast Setup](#fast-setup)
+    - [*\(Alternatively\) Headless Connection*](#alternatively-headless-connection)
+        - [Troubleshooting SSH](#troubleshooting-ssh)
+    - [Configure the Raspberry Pi](#configure-the-raspberry-pi)
+- [Specifics for this Application](#specifics-for-this-application)
+    - [Installation](#installation)
+    - [Configure Thingspeak](#configure-thingspeak)
+- [First Use](#first-use)
+- [Putting Everything Together \(Electronics\)](#putting-everything-together-electronics)
+- [Next Steps](#next-steps)
 
 <!-- /MarkdownTOC -->
 

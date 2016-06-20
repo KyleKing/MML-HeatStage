@@ -1,7 +1,33 @@
 # MML-HeatStage
 Maryland MEMS and Microfluidics Laboratory Node Application to control a dual-heat stage among other things
 
-## Starting from Scratch
+## Quick Start
+
+Download a ready to go Jessie img with the Turtlebot controller and other installed software: [https://dl.dropboxusercontent.com/u/34498281/RPI_Complete_Heat_Stage_Controller.img.zip](https://dl.dropboxusercontent.com/u/34498281/RPI_Complete_Heat_Stage_Controller.img.zip). Once downloaded, unzip the folder and open a terminal session to enter these commands:
+
+1. Get the microSD disk number and unmount the specified disk (in this case, /dev/disk2)
+
+    ```sh
+    diskutil list | grep 0: # then match up the disk name and disk ID
+    diskutil unmountDisk /dev/disk2 # or disk3, etc.
+    ```
+
+2. See the notes prepended by `#`. Make sure to update the file name and disk ID appropriately. To check the current status, while writing to the SD card press <kbd>Ctrl</kbd>+<kbd>T</kbd> (on Mac).
+
+    ```sh
+    # Navigate to your downloads folder
+    cd ~/Downloads
+    # Unzip the newly downloaded file
+    unzip RPI_Complete_Heat_Stage_Controller.img.zip
+    # Write the unzipped file to your card
+    sudo dd bs=1m if=RPI_Complete_Heat_Stage_Controller.img of=/dev/rdisk2
+    ```
+
+3. After a short wait, the SD card will be ready to go. Plug the microSD card into the Raspberry Pi and connect the USB Devices/HDMI/Ethernet cord with the micro USB power supply last. You should the green light blink to confirm the SD card is booting. The green light will stop when completed booting.
+
+Now skip to "Booting a Fresh Installation" and skip the installation steps (that has already been done for you!)
+
+## *(Alternatively) Starting from Scratch*
 
 First, you'll want a clean installation of Jessie on a SD card 4gb or greater (8 gb preferable)
 

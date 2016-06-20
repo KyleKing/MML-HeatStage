@@ -1,6 +1,28 @@
 # MML-HeatStage
 Maryland MEMS and Microfluidics Laboratory Node Application to control a dual-heat stage among other things
 
+## Table of Contents
+
+<!-- MarkdownTOC depth="6" -->
+
+- Quick Start
+- *\(Alternatively\) Starting from Scratch*
+    - Format a fresh microSD Card
+    - Download `Raspbian-Jessie`
+- Booting a Fresh Installation
+    - Fast Setup
+    - *\(Alternatively\) Headless Connection*
+        - Troubleshooting SSH
+    - Configure the Raspberry Pi
+- Specifics for this Application
+    - Installation
+    - Configure Thingspeak
+- First Use
+- Putting Everything Together \(Electronics\)
+- Next Steps
+
+<!-- /MarkdownTOC -->
+
 ## Quick Start
 
 Download a ready to go Jessie img with the Turtlebot controller and other installed software: [https://dl.dropboxusercontent.com/u/34498281/RPI_Complete_Heat_Stage_Controller.img.zip](https://dl.dropboxusercontent.com/u/34498281/RPI_Complete_Heat_Stage_Controller.img.zip). Once downloaded, unzip the folder and open a terminal session to enter these commands:

@@ -1,49 +1,50 @@
 {
 	"PID": {
-		"MELTER": {
-			"target": 80
-		},
-		"left": {
+		"Cold": {
 			"target": 5,
 			"kp": -1.5,
 			"ki": 0,
 			"kd": 0,
 			"dt": 1.004
 		},
-		"middle": {
-			"target": null,
-			"kp": 0,
+		"Hot": {
+			"target": 55,
+			"kp": 0.25,
 			"ki": 0,
 			"kd": 0,
 			"dt": 1.004
 		},
-		"right": {
-			"target": 55,
-			"kp": 0.25,
+		"Melter": {
+			"target": 80,
+			"kp": 0.35,
 			"ki": 0,
 			"kd": 0,
 			"dt": 1.004
 		}
 	},
 	"wiring": {
+		"Hot": "Left",
+		"Fan": "Middle",
+		"Cold": "Right",
+
 		"LeftFET": 21,
 		"MiddleFET": 27,
 		"RightFET": 23,
 
-		"Right": {
-			"DO": 18,
-			"CS": 17,
-			"CLK": 4
+		"Left": {
+			"DO": 20,
+			"CS": 19,
+			"CLK": 25
 		},
 		"Middle": {
 			"DO": 24,
 			"CS": 16,
 			"CLK": 22
 		},
-		"Left": {
-			"DO": 20,
-			"CS": 19,
-			"CLK": 25
+		"Right": {
+			"DO": 18,
+			"CS": 17,
+			"CLK": 4
 		}
 	},
 	"scripts": {

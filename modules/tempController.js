@@ -5,7 +5,7 @@
  */
 var clc = require('cli-color');
 var warn = clc.yellow;
-var info = clc.blue;
+// var info = clc.blue;
 // var h1 = info.bold;
 
 var debug = require('debug');
@@ -75,7 +75,6 @@ module.exports = {
       pyScript = this.set.scripts.test_thermocouple;
     else if (process.env.MELTER === 'true')
       pyScript = this.set.scripts.single_thermocouple;
-
     var pyshell = new PythonShell(pyScript, function (err) {
       if (err) throw err;
     });
@@ -86,33 +85,49 @@ module.exports = {
    * Configure MOSFET wiring
    */
   configureWiring: function () {
+    // Configure Hot and Cold Mosfet Pins
     this.set = require(__dirname + '/../settings.json');
 
-    this.FanFET = this.set.wiring.MiddleFET;
-    process.env.HotFET = this.set.wiring.RightFET;
-    process.env.ColdFET = this.set.wiring.LeftFET;
-    tempCont('>> Wiring Config: FanFET: ' + this.FanFET + ' HotFET: ' +
-      process.env.HotFET + ' ColdFET: ' + process.env.ColdFET);
+    process.env.HotFET = this.set.wiring[this.set.wiring.Hot +
+      'FET'];
+    process.env.ColdFET = this.set.wiring[this.set.wiring.Cold +
+      'FET'];
+    tempCont('>> Wiring Config: HotFET: ' + process.env.HotFET +
+      ' ColdFET: ' + process.env.ColdFET);
+    this.configurePID();
+  },
 
-    var HotPID = this.set.PID.right;
+  /**
+   * Configure PID Algorithm
+   */
+  configurePID: function () {
+    // Determine if running Melter or DualStage program:
+    var HotPID = this.configureHotPID();
+    if (process.env.MELTER === 'true') {
+      hotController.setTarget(this.set.PID.MELTER.target); // °C
+      tempCont('Single Melting Stage is Heating to ' +
+        this.set.PID.MELTER.target + '°C');
+    } else {
+      hotController.setTarget(HotPID.target); // °C
+      this.configureColdPID();
+    }
+  },
+  configureColdPID: function () {
+    var ColdPID = this.set.PID.Cold;
+    tempCont('>> Cold PID controller: Kp: ' + ColdPID.kp + ' Kd: ' +
+      ColdPID.kd + ' Ki: ' + ColdPID.ki);
+    coldController = new Controller(ColdPID.kp, ColdPID.ki,
+      ColdPID.kd, ColdPID.dt);
+    coldController.setTarget(ColdPID.target); // °C
+    return ColdPID;
+  },
+  configureHotPID: function () {
+    var HotPID = this.set.PID.Hot;
     tempCont('>> Hot PID controller: Kp: ' + HotPID.kp + ' Kd: ' + HotPID.kd +
       ' Ki: ' + HotPID.ki);
     hotController = new Controller(HotPID.kp, HotPID.ki,
       HotPID.kd, HotPID.dt);
-    if (process.env.MELTER === 'true') {
-      tempCont('Single Melting Stage is Heating to ' +
-        this.set.PID.MELTER.target + '°C');
-      hotController.setTarget(this.set.PID.MELTER.target); // °C
-    } else {
-      hotController.setTarget(HotPID.target); // °C
-      tempCont('Both temperature stages are PID-controlled');
-      var ColdPID = this.set.PID.left;
-      tempCont('>> Cold PID controller: Kp: ' + ColdPID.kp + ' Kd: ' +
-        ColdPID.kd + ' Ki: ' + ColdPID.ki);
-      coldController = new Controller(ColdPID.kp, ColdPID.ki,
-        ColdPID.kd, ColdPID.dt);
-      coldController.setTarget(ColdPID.target); // °C
-    }
+    return HotPID;
   },
 
   /**
@@ -143,37 +158,26 @@ module.exports = {
    * Realtime temperature updates
    */
   monitor: function (message) {
-    tempCont('Starting Monitor Function');
-    var message = message.trim().split(',');
-    if (process.env.MELTER === 'true') {
-      message[2] = '0';
-      message[3] = '0';
-    }
-    var hotExternal = message[0].trim(),
-        hotInternal = message[1].trim(),
-        coldExternal = message[2].trim(),
-        coldInternal = message[3].trim();
-
-    console.log('-----------------------------------');
+    var parse = util.parseMessage(message);
 
     // Make appropriate changes
-    var hotCorrection = hotController.update(hotExternal),
+    var hotCorrection = hotController.update(parse.hotExternal),
         hotClipped = util.clipCorrection(hotCorrection),
         hotPWM = hotClipped.correction;
-    console.log('H: ' + hotClipped.color(hotExternal+'°C') + ' and H(i): ' +
-      hotClipped.color(hotInternal+'°C') );
+    console.log('H: ' + hotClipped.color(parse.hotExternal+'°C') +
+      ' and H(i): ' + hotClipped.color(parse.hotInternal+'°C') );
 
     var coldPWM = 0;
     if (process.env.MELTER === 'false') {
-      var coldCorrection = coldController.update(coldExternal),
+      var coldCorrection = coldController.update(parse.coldExternal),
           coldClipped = util.clipCorrection(coldCorrection);
       coldPWM = coldClipped.correction;
-      console.log('C: ' + coldClipped.color(coldExternal+'°C') + ' and C(i): ' +
-        coldClipped.color(coldInternal+'°C') );
+      console.log('C: ' + coldClipped.color(parse.coldExternal+'°C') +
+        ' and C(i): ' + coldClipped.color(parse.coldInternal+'°C') );
     }
 
-    util.updateThingspeakAPI(client, hotExternal, hotPWM,
-      coldExternal, coldPWM);
+    util.updateThingspeakAPI(client, parse.hotExternal, hotPWM,
+      parse.coldExternal, coldPWM);
 
     if (process.env.MONITOR === 'false' && process.env.LOCAL === 'false') {
       piblaster.setPwm(process.env.HotFET, hotPWM);

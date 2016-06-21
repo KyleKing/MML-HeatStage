@@ -34,6 +34,23 @@ module.exports = {
     };
   },
 
+  // Parse incoming messages from the Python script
+  parseMessage: function (message) {
+    utilityDebug('Starting Monitor Function');
+    var message = message.trim().split(',');
+    if (process.env.MELTER === 'true') {
+      message[2] = '0';
+      message[3] = '0';
+    }
+    console.log('-----------------------------------');
+    return {
+      'hotExternal': message[0].trim(),
+      'hotInternal': message[1].trim(),
+      'coldExternal': message[2].trim(),
+      'coldInternal': message[3].trim()
+    };
+  },
+
   /**
    * Update Thingspeak dashboard for realtime charts
    * (Note: API rate limit imposed by NPM module)

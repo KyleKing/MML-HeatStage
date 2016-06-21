@@ -25,7 +25,7 @@ Maryland MEMS and Microfluidics Laboratory Node Application to control a dual-he
 
 ## Quick Start
 
-Download a ready to go Jessie img with the Turtlebot controller and other installed software: [https://dl.dropboxusercontent.com/u/34498281/RPI_Complete_Heat_Stage_Controller.img.zip](https://dl.dropboxusercontent.com/u/34498281/RPI_Complete_Heat_Stage_Controller.img.zip). Once downloaded, unzip the folder and open a terminal session to enter these commands:
+Download a ready to go Jessie img with the Turtlebot controller and other installed software: [RPI_Complete_Heat_Stage_Controller.img.zip](https://dl.dropboxusercontent.com/u/34498281/Condensed%20Research%20Files/RPI_Complete_Heat_Stage_Controller.img.zip). Once downloaded, unzip the folder and open a terminal session to enter these commands:
 
 1. Get the microSD disk number and unmount the specified disk (in this case, /dev/disk2)
 

@@ -87,11 +87,9 @@ module.exports = {
   configureWiring: function () {
     // Configure Hot and Cold Mosfet Pins
     this.set = require(__dirname + '/../settings.json');
-
-    process.env.HotFET = this.set.wiring[this.set.wiring.Hot +
-      'FET'];
-    process.env.ColdFET = this.set.wiring[this.set.wiring.Cold +
-      'FET'];
+    var wir = this.set.wiring;
+    process.env.HotFET = wir[wir.Hot + 'FET'];
+    process.env.ColdFET = wir[wir.Cold + 'FET'];
     tempCont('>> Wiring Config: HotFET: ' + process.env.HotFET +
       ' ColdFET: ' + process.env.ColdFET);
     this.configurePID();

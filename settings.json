@@ -23,18 +23,18 @@
 		}
 	},
 	"wiring": {
-		"Hot": "Left",
-		"Fan": "Middle",
-		"Cold": "Right",
+		"Hot": "Right",
+		"Optional": "Middle",
+		"Cold": "Left",
 
 		"LeftFET": 21,
 		"MiddleFET": 27,
 		"RightFET": 23,
 
 		"Left": {
-			"DO": 20,
-			"CS": 19,
-			"CLK": 25
+			"DO": 25,
+			"CS": 20,
+			"CLK": 19
 		},
 		"Middle": {
 			"DO": 24,

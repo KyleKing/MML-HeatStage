@@ -5,7 +5,7 @@ import time
 import sys
 import json
 
-with open('../settings.json') as settings:
+with open('settings.json') as settings:
     data = json.load(settings)
 
 # Hot (Usually Left-Most reader - closest to USB ports)
@@ -15,11 +15,12 @@ CS_hot = int(data["wiring"][which]["CS"])
 CLK_hot = int(data["wiring"][which]["CLK"])
 sensor_hot = MAX31855.MAX31855(CLK_hot, CS_hot, DO_hot)
 
-# # Middle - Actually Used, so FIXME!
-# CLKm = 22
-# CSm = 16
-# DOm = 24
-# sensorM = MAX31855.MAX31855(CLKm, CSm, DOm)
+# Middle
+which = data["wiring"]["Optional"]
+DO_middle = int(data["wiring"][which]["DO"])
+CS_middle = int(data["wiring"][which]["CS"])
+CLK_middle = int(data["wiring"][which]["CLK"])
+sensor_middle = MAX31855.MAX31855(CLK_middle, CS_middle, DO_middle)
 
 # Cold (Usually Right-Most reader)
 which = data["wiring"]["Cold"]

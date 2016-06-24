@@ -50,11 +50,10 @@
 	"scripts": {
 		"read_thermocouple": "Scripts_Python/read_Thermocouples.py",
 		"single_thermocouple": "Scripts_Python/single_Thermocouples.py",
-		"test_thermocouple": "Scripts_Python/test_Thermocouples.py",
+		"fake_thermocouple": "Scripts_Python/fake_Thermocouples.py",
 
 		"test_ADC": "Scripts_Python/test_ADC.py",
 
-		"installMeteor": "Scripts_Shell/make.sh",
 		"start_Pi_Blaster": "Scripts_Shell/start_Pi-Blaster.sh",
 		"updateRPI": "Scripts_Shell/update.sh"
 	}

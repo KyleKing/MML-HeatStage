@@ -72,7 +72,7 @@ module.exports = {
     // Start thermocouple-reading python script
     var pyScript = this.set.scripts.read_thermocouple;
     if (process.env.LOCAL === 'true')
-      pyScript = this.set.scripts.test_thermocouple;
+      pyScript = this.set.scripts.fake_thermocouple;
     else if (process.env.MELTER === 'true')
       pyScript = this.set.scripts.single_thermocouple;
     var pyshell = new PythonShell(pyScript, function (err) {

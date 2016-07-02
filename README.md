@@ -1,12 +1,12 @@
 # MML-HeatStage
-Maryland MEMS and Microfluidics Laboratory Node Application to control a dual-heat stage among other things
+Maryland MEMS and Microfluidics Laboratory Node Application to control a dual-heat stage among other things. To see more advanced notes on controlling a Raspberry Pi, see my: "[Another Raspberry Pi Guide](https://github.com/KyleKing/Another_Raspberry_Pi_Guide)".
 
 ## Table of Contents
 
 <!-- MarkdownTOC depth="6" autolink="true" bracket="round" -->
 
 - [Quick Start](#quick-start)
-- [*\(Alternatively\) Starting from Scratch*](#alternatively-starting-from-scratch)
+- [\(Alternatively\) Starting from Scratch](#alternatively-starting-from-scratch)
     - [Format a fresh microSD Card](#format-a-fresh-microsd-card)
     - [Download `Raspbian-Jessie`](#download-raspbian-jessie)
 - [Booting a Fresh Installation](#booting-a-fresh-installation)
@@ -19,6 +19,8 @@ Maryland MEMS and Microfluidics Laboratory Node Application to control a dual-he
     - [Configure Thingspeak](#configure-thingspeak)
 - [First Use](#first-use)
 - [Putting Everything Together \(Electronics\)](#putting-everything-together-electronics)
+    - [The Device](#the-device)
+    - [Electronics](#electronics)
 - [Next Steps](#next-steps)
 
 <!-- /MarkdownTOC -->
@@ -29,14 +31,14 @@ Download a ready to go Jessie img with the Turtlebot controller and other instal
 
 1. Get the microSD disk number and unmount the specified disk (in this case, /dev/disk2)
 
-    ```sh
+    ```bash
     diskutil list | grep 0: # then match up the disk name and disk ID
     diskutil unmountDisk /dev/disk2 # or disk3, etc.
     ```
 
 2. See the notes prepended by `#`. Make sure to update the file name and disk ID appropriately. To check the current status, while writing to the SD card press <kbd>Ctrl</kbd>+<kbd>T</kbd> (on Mac).
 
-    ```sh
+    ```bash
     # Navigate to your downloads folder
     cd ~/Downloads
     # Unzip the newly downloaded file
@@ -47,9 +49,18 @@ Download a ready to go Jessie img with the Turtlebot controller and other instal
 
 3. After a short wait, the SD card will be ready to go. Plug the microSD card into the Raspberry Pi and connect the USB Devices/HDMI/Ethernet cord with the micro USB power supply last. You should the green light blink to confirm the SD card is booting. The green light will stop when completed booting.
 
-Now skip to "Booting a Fresh Installation" and skip the installation steps (that has already been done for you!)
+4. One extra step for later - the files in the MML-Heatstage/ folder will be slightly out of date. You will need to update before you run the files for the first time. Run the code snippet below right before you are ready to run the code for the first time.
 
-## *(Alternatively) Starting from Scratch*
+    ```bash
+    cd ~/MML-Heatstage
+    git reset HEAD --hard
+    git pull
+    # now enter the credentials for the UMD-MMl account
+    ```
+
+Now skip `Download Raspbian-Jessie` and later `Installation` (those have both been done for you!)
+
+## (Alternatively) Starting from Scratch
 
 First, you'll want a clean installation of Jessie on a SD card 4gb or greater (8 gb preferable)
 
@@ -63,14 +74,14 @@ Download the [latest distribution hosted by the Raspberry Pi foundation](https:/
 
 1. Get the microSD disk number and unmount the specified disk (in this case, /dev/disk2)
 
-    ```sh
+    ```bash
     diskutil list | grep 0: # then match up the disk name and disk ID
     diskutil unmountDisk /dev/disk2
     ```
 
 2. See the notes prepended by `#`. Make sure to update the file name and disk ID appropriately. To check the current status, while writing to the SD card press <kbd>Ctrl</kbd>+<kbd>T</kbd> (on Mac).
 
-    ```sh
+    ```bash
     # Navigate to your downloads folder
     cd ~/Downloads
     # Unzip the newly downloaded file
@@ -106,7 +117,7 @@ Latest release installer: nmap-7.12.dmg` link (for Mac). There are also options 
 
 Using nmap, find the raspberry pi's IP address ([Source](http://raspberrypi.stackexchange.com/questions/13936/find-raspberry-pi-address-on-local-network/13937#13937)):
 
-```sh
+```bash
 nmap -p 22 --open -sV 192.168.2.*
 # Alternatively:
 sudo nmap -sP 192.168.2.* | awk '/^Nmap/{ip=$NF}/B8:27:EB/{print ip}'
@@ -117,7 +128,7 @@ sudo nmap -sP 192.168.1.*
 
 Now connect to the Raspberry Pi. The initial password is `raspberry`, while the user is pi.
 
-```sh
+```bash
 # Use the address returned by the previous command
 ssh pi@192.168.2.8
 ```
@@ -126,7 +137,7 @@ ssh pi@192.168.2.8
 
 If having trouble with “man in the middle” warnings, regenerate the SSH key:
 
-```sh
+```bash
 ssh-keygen -R # "<enter hostname>”
 # For example:
 ssh-keygen -R 192.168.2.9
@@ -136,7 +147,7 @@ ssh-keygen -R 192.168.2.9
 
 The initial password is `raspberry`. Once logged in you will need to run:
 
-```sh
+```bash
 sudo raspi-config
 ```
 
@@ -146,7 +157,7 @@ Click through the menu options using your arrow keys. You will want to make sure
 * Change password
 * Set locale (Internationalisation Options -> Change Locale ->  en_GB.UTF-8 -> then set again as default)
 * and any other options you see fit
-* Reboot, especially if you changed the filesystem
+* Reboot, especially if you changed the filesystem size
 
 ## Specifics for this Application
 
@@ -154,11 +165,12 @@ Click through the menu options using your arrow keys. You will want to make sure
 
 You will need to install a few prerequisites to get started.
 
-```sh
+```bash
 # Download the node installer:
 wget https://nodejs.org/dist/v4.0.0/node-v4.0.0-linux-armv7l.tar.gz
 tar -xvf node-v4.0.0-linux-armv7l.tar.gz
 cd node-v4.0.0-linux-armv7l
+sudo cp -R * /usr/local/
 
 # Download a python library for thermocouples
 # Adafruit_Python_MAX31855: https://github.com/adafruit/Adafruit_Python_MAX31855
@@ -179,7 +191,7 @@ cd ~/pi-blaster/
 
 Check the newly installed libraries
 
-```sh
+```bash
 node -v
 # it should return: v4.0.0
 
@@ -204,7 +216,7 @@ echo "21=0" > /dev/pi-blaster
 
 Install the other files for the Node Application:
 
-```sh
+```bash
 # Download Kyle's Node Application:
 cd ~
 git clone https://github.com/KyleKing/MML-HeatStage.git
@@ -215,7 +227,7 @@ npm install
 
 To make sure everything is up to date, make sure to run this file. Although you don't need to run it right now:
 
-```sh
+```bash
 cd ~/MML-HeatStage/Scripts_Shell/
 bash update.sh
 ```
@@ -242,7 +254,7 @@ You will need to create an account and grab a couple of authentication keys:
 
 3. Run a few more command line commands:
 
-	```sh
+	```bash
 	cd ~/MML-HeatStage/
 	# Make a new file:
 	touch thingspeakkey.json
@@ -264,7 +276,7 @@ You will need to create an account and grab a couple of authentication keys:
 
 Run:
 
-```sh
+```bash
 cd ~/MML-HeatStage
 node init.js -l
 ```
@@ -289,7 +301,7 @@ If you wish to see greater details and other debugging information, use this com
 
 In the past two examples you've already used options flags, which are interpreted by the Node application. Like this (you can get this output by running `node init.js --help`:
 
-```sh
+```bash
 Usage: init [options]
 
 Options:
@@ -310,21 +322,106 @@ On a quick side note, for melting the agarose bead bed, use `node init.js -melte
     <img width="450" height=auto src="README/init-lM.png">
 </p>
 
-<!-- ![Local iTerm](README/init-lM.png) -->
-
 ## Putting Everything Together (Electronics)
 
-You will need to edit the `settings.json` file to some extent.
+You will need to edit the `settings.json` file to some extent. An abbreviated example file is pasted below with notes:
 
-TODO:
+```
+{
+    "PID": {
+        // The PID values can be calibrated however you like:
+        "Cold": {
+            "target": 5,
+            "kp": -1.5,
+            "ki": 0,
+            "kd": 0,
+            "dt": 1.004
+        }
+    },
+    "wiring": {
+        // These names need to be precise
+        // You can choose from Right, Middle, and Left (Note capitalization)
+        // The string is matched to LeftFET and Left, RightFET and Right, etc.
+        // These values allow you to change which connection controls what
+        "Hot": "Right",
+        "Cold": "Left",
+        "LeftFET": 21,
+        "RightFET": 23,
+        "Left": {
+            "DO": 25,
+            "CS": 20,
+            "CLK": 19
+        },
+        "Right": {
+            "DO": 18,
+            "CS": 17,
+            "CLK": 4
+        }
+    },
+    "scripts": {
+        // Don't modify these lines unless you modify or create new scripts
+        // This is more to help you know which files are used and how
+        "read_thermocouple": "Scripts_Python/read_Thermocouples.py",
+        "single_thermocouple": "Scripts_Python/single_Thermocouples.py",
+        "fake_thermocouple": "Scripts_Python/fake_Thermocouples.py",
+        "test_ADC": "Scripts_Python/test_ADC.py",
+        "start_Pi_Blaster": "Scripts_Shell/start_Pi-Blaster.sh",
+        "updateRPI": "Scripts_Shell/update.sh"
+    }
+}
+```
 
-- settings
-- wiring diagrams (what app?) and check pin numbering
-- show pictures of setup
+### The Device
 
+<p align="center">
+  <img width="450" height=auto src="README/_DualHeatStage.png">
+</p>
+<p align="center">Complete Dual Heat Stage (Turtlebot)</p>
+
+<p align="center">
+  <img width="450" height=auto src="README/_Melter.png">
+</p>
+<p align="center">Single Cooling/Heating Stage (Melter)</p>
+
+<p align="center">
+  <img width="100%" height=auto src="README/fullview.jpg">
+</p>
+<p align="center">Turtlebot complete setup</p>
+
+### Electronics
+
+<p align="center">
+  <img width="450" height=auto src="README/candid_photo.jpg">
+</p>
+<p align="center">Turtlebot and electronics</p>
+
+<p align="center">
+  <img width="450" height=auto src="README/board_combined.jpg">
+</p>
+<p align="center">Side view of the stacked components</p>
+
+<p align="center">
+  <img width="450" height=auto src="README/board_thermocouple.jpg">
+</p>
+<p align="center">The bottom perfboard (thermocouple adapters)</p>
+
+<p align="center">
+  <img width="450" height=auto src="README/board_MOSFET.jpg">
+</p>
+<p align="center">The top perfboard (MOSFET and LED indicators)</p>
+
+<p align="center">
+  <img width="450" height=auto src="README/comparison.jpg">
+</p>
+<p align="center">The original device prototyped on a breadboard</p>
+
+<p align="center">
+  <img width="450" height=auto src="README/DualHeatStage---Breadboard-Version.png">
+</p>
+<p align="center">An exported circuit didagram from Fritzing. For the entire file, see "DualHeatStage---Breadboard-Version.fzz"</p>
 
 ## Next Steps
 
-The code base currently supports controlling syringe pumps and the pi camera, but I ran out of time to finish the implementation and the user interface. If you would like to continue developing the code base the functionality is there.
+The code base currently supports controlling syringe pumps and the pi camera, but I ran out of time to finish the implementation and the user interface. If you would like to continue developing the functionality is mostly there!
 
-To see the literature review, early results, posters, other documentation, and ideas for future directions of this research, refer to the mantis issue here:
+To see the literature review, early results, posters, other documentation, and ideas for future directions of this research, refer to the [main guide](https://github.com/KyleKing/AgaroseMeltingProject)
